@@ -1,36 +1,39 @@
 #include <iostream>
 #include "Matrix.h"
 #include <cassert>
-#include <tuple>
-
-using MatrixType = int; //Задаем тип для примера
-constexpr MatrixType matrixdefaultValue = -1; //Задаем значение для примера
 
 /// Главная функция программы
 int main() {
-    // Создаем матрицу с значением по умолчанию 1.0
-    Matrix<1.0> matrix;
-    assert(matrix.size() == 0); // все ячейки свободны
+	// Создаем матрицу с значением по умолчанию 0.0
+	Matrix<0> matrix;
 
-    // Чтение значения из свободной ячейки
-    auto a = matrix[0][0];
-    assert(static_cast<double>(a) == 1.0);
-    assert(matrix.size() == 0);
+	// Заполняем главную диагональ матрицы (от [0,0] до [9,9]) значениями от 0 до 9
+	// а второстепенную диагональ (от [0,9] до [9,0]) значениями от 9 до 0
+	for (int i = 0; i < 10; ++i) {
+		matrix[i][i] = i;
+		matrix[i][9 - i] = 9 - i;
+	}
 
-    // Запись значения в ячейку [100][100]
-    matrix[100][100] = 314;
-    matrix[100][100] = 514;
-    assert(static_cast<double>(matrix[100][100]) == 514);
-    assert(matrix.size() == 1);
+	//Выводим фрагмент матрицы от [1,1] до [8,8]
+	for (int i = 1; i <= 8; ++i) {
+		for (int j = 1; j <= 8; ++j) {
+			std::cout << matrix.at(i, j) << " ";
+		}
+		std::cout << std::endl;
+	}
 
-    // Вывод всех занятых ячеек
-    for (const auto& c : matrix) {
-        int x;
-        int y;
-        double v;
-        std::tie(x, y, v) = c;
-        std::cout << x << y << v << std::endl;
-    }
+	// Выводим количество занятых ячеек
+	std::cout << "Size: " << matrix.size() << std::endl;
 
-    return 0;
+	// Выводим все занятые ячейки вместе со своими позициями
+	std::cout << "Print:" << std::endl;
+	for (auto const& [x, y, value] : matrix) {
+		std::cout << '[' << x << "][" << y << "] = " << value << std::endl;
+	}
+
+	//Реализованная каноническая форма =
+	((matrix[100][100] = 314) = 0) = 217;
+	assert(matrix.at(100, 100) == 217);
+
+	return 0;
 }
